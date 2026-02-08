@@ -54,7 +54,7 @@ Upon first launch, the tool automatically installs missing dependencies (`shodan
 
 ---
 
-### TERMUX (ANDROID)
+### [TERMUX (ANDROID)]
 
 ```bash
 # Update repositories
@@ -72,7 +72,7 @@ python chakravyuh.py
 ```
 
 
-### KALI LINUX / UBUNTU
+###  - KALI LINUX / UBUNTU - 
 ```bash
 # Update system
 sudo apt update
@@ -87,7 +87,7 @@ git clone https://github.com/trmxvibs/ip-tracker
 cd ip-tracker
 python3 chakravyuh.py
 ```
-### WINDOWS
+###[WINDOWS
 
 Download and install Python 3.x (check “Add to PATH”).
 
