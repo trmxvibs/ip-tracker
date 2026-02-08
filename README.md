@@ -1,166 +1,169 @@
 <img width="815" height="235" alt="image" src="https://github.com/user-attachments/assets/63bda267-4941-49ba-a80b-02b3f28edb73" />
 
 <div align="center">
+  <b>ADVANCED OSINT, RECONNAISSANCE & DEVICE FINGERPRINTING FRAMEWORK</b>
+  <br><br>
 
-![CHAKRAVYUH](https://img.shields.io/badge/CHAKRAVYUH-FRAMEWORK-red?style=for-the-badge&logo=kali-linux&logoColor=white)
+  <a href="https://github.com/trmxvibs/ip-tracker">
+    <img src="https://img.shields.io/badge/Language-Python_3-14354C?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  </a>
+  <a href="https://github.com/trmxvibs/ip-tracker">
+    <img src="https://img.shields.io/badge/Platform-Linux_|_Windows_|_Termux-000000?style=for-the-badge&logo=linux&logoColor=white" alt="Platform">
+  </a>
+  <a href="https://github.com/trmxvibs/ip-tracker/releases">
+    <img src="https://img.shields.io/badge/Version-1.0-red?style=for-the-badge" alt="Version">
+  </a>
+  <a href="https://github.com/trmxvibs">
+    <img src="https://img.shields.io/github/repo-size/trmxvibs/ip-tracker?color=orange&style=for-the-badge&logo=github" alt="Size">
+  </a>
+  <a href="https://github.com/trmxvibs/ip-tracker/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+  </a>
 
-<br>
+  <br><br>
 
-![Python](https://img.shields.io/badge/LANGUAGE-PYTHON_3-blue?style=for-the-badge&logo=python&logoColor=white)
-![Platform](https://img.shields.io/badge/PLATFORM-LINUX_|_TERMUX_|_WINDOWS-black?style=for-the-badge&logo=linux&logoColor=white)
-![Security](https://img.shields.io/badge/SECURITY-RED_TEAM-crimson?style=for-the-badge&logo=security&logoColor=white)
-![License](https://img.shields.io/badge/LICENSE-MIT-green?style=for-the-badge)
+  <p>
+    <b>Ip-tracker (Chakravyuh)</b> is a reconnaissance tool designed for red teaming and authorized security research.
+    It combines passive OSINT capabilities with active social engineering modules to extract precise target data.
+    <br><br>
+    Features <b>Auto-Tunneling</b>, <b>Telegram Real-time Alerts</b>, and <b>Advanced Device Fingerprinting</b>
+    without requiring manual port forwarding.
+  </p>
+</div>
 
-<br>
+---
 
-![Stars](https://img.shields.io/github/stars/trmxvibs/ip-tracker?style=for-the-badge&color=gold&label=STARS)
-![Forks](https://img.shields.io/github/forks/trmxvibs/ip-tracker?style=for-the-badge&color=orange&label=FORKS)
-![Size](https://img.shields.io/github/repo-size/trmxvibs/ip-tracker?style=for-the-badge&color=blue&label=SIZE)
-![Maintenance](https://img.shields.io/badge/MAINTAINED-YES-success?style=for-the-badge)
+## CORE CAPABILITIES
+
+| MODULE | DESCRIPTION |
+|--------|-------------|
+| **IP INTELLIGENCE** | Geo-locate targets with map generation. Integrates Shodan to detect OS, open ports, and vulnerabilities. |
+| **DEVICE TRAPPER** | Deploys social engineering pages (Fake Cloudflare / Update). Captures GPU model, CPU, RAM, battery, network type, and timezone. |
+| **PHONE RECON** | Validates phone numbers and extracts carrier, location, and timezone information globally. |
+| **PORT SCANNER** | Multi-threaded active scan for critical open ports (21, 22, 80, 443, 3389, etc.). |
+| **DOMAIN INTEL** | Resolves host IPs and enumerates subdomains via Shodan DNS database. |
+| **REAL-TIME ALERTS** | Sends captured victim details instantly to your Telegram bot. |
+| **AUTO-TUNNELING** | Built-in support for Cloudflared and Serveo. No manual configuration needed. |
+
+---
+
+## INSTALLATION
+
+### AUTO-INSTALLER INCLUDED
+Upon first launch, the tool automatically installs missing dependencies (`shodan`, `folium`, `phonenumbers`, etc.).
+
+---
+
+### TERMUX (ANDROID)
+
+```bash
+# Update repositories
+pkg update && pkg upgrade -y
+
+# Install dependencies
+pkg install python git openssh -y
+
+# Clone repository
+git clone https://github.com/trmxvibs/ip-tracker
+
+# Navigate and run
+cd ip-tracker
+python chakravyuh.py
+```
+
+
+### KALI LINUX / UBUNTU
+```bash
+# Update system
+sudo apt update
+
+# Install dependencies
+sudo apt install python3 python3-pip git -y
+
+# Clone repository
+git clone https://github.com/trmxvibs/ip-tracker
+
+# Navigate and run
+cd ip-tracker
+python3 chakravyuh.py
+```
+### WINDOWS
+
+Download and install Python 3.x (check “Add to PATH”).
+
+Download this repository.
+
+Open CMD inside the folder.
+Run
+```sh
+python chakravyuh.py
+```
+
+<div align="center">
+
+##  MENU OVERVIEW
 
 </div>
 
 ---
-**CHAKRAVYUH is the ultimate Offensive OSINT & Reconnaissance Framework designed for high-level penetration testing and red teaming. This is not just an IP tracker; it is a sophisticated Cyber Trap Engine.
-It leverages advanced Social Engineering techniques combined with Shodan Intelligence to extract critical hardware and network data from targets. Whether you are operating on Kali Linux, Termux, or Windows, CHAKRAVYUH provides a tactical advantage in information gathering.
-DOMINATE THE NETWORK. TRACK THE UNTRACKABLE.**
+
+> ### **[1] IP Tracker**
+> Enter any IP address to retrieve city, country, ISP, and map file (`.html`).  
+> *If Shodan API is active, it also fetches vulnerabilities and ports.*
+
+> ### **[2] Port Scanner**
+> Checks for open ports on the target IP (FTP, SSH, Telnet, HTTP, HTTPS, SMB, RDP, etc.).
+
+> ### **[3] Phone Number Tracker**
+> Enter number with country code (example: `+919876543210`).  
+> Returns valid carrier, region, and timezone data.
+
+> ### **[4] Domain Intel**
+> Resolves domain names to IP addresses and lists subdomains found in public databases.
+
+> ### **[5] Device Trapper (Honeypot)**
+> Hosts a fake page (Cloudflare / System Update) via secure tunnel.
+
 ---
 
-##  1.  ADVANCED GEO-INTELLIGENCE
-- Precision Tracking: Extract exact Latitude/Longitude, Country, City, and Zip Codes.
+### Captures:
+---
+- GPU model
+- Battery percentage
+- Screen resolution
+- Browser
+- Public IP
+---
+### Logs:
 
-- ISP Enumeration: Identify Internet Service Providers and detect VPN/Proxy usage.
+- Saves data to loot_log.txt
 
-- Visual Recon: Auto-generates satellite maps using Folium for real-time location visualization.
+### Alerts:
 
-```sh
-[?] Target IP: 8.8.8.8
+- Sends captured data to Telegram.
 
-[*] IP Analysis...
- Geo    : Ashburn, United States
- ISP    : Google LLC
- Proxy  : False
- Map    : Saved as map_8.8.8.8.html
-```
+> ### **[6] Settings**
 
+- Configure API keys:
 
-## 2.  HARDWARE FINGERPRINTING (THE TRAP)
-- GPU Detection: Identifies Adreno, Mali, or Apple graphics renderers to pinpoint specific mobile devices (Samsung, OnePlus, iPhone).
-- System Diagnostics: Extracts CPU Core count, RAM availability, and Screen Resolution.
-- Power Analysis: Detects Battery Percentage and Charging Status live.
-- Stealth Tunnels: Uses Cloudflared and Serveo to create secure, anonymous HTTPS links that bypass firewalls.
+- Shodan API Key — for deep reconnaissance
 
-<img width="1404" height="961" alt="image" src="https://github.com/user-attachments/assets/93166843-6ddc-4d0e-9a63-bbb050ec34de" />
+- Telegram Bot Token & Chat ID — receive captured data alerts
 
-```python
- ──────────────────────────────────────────
-  █▀▄▀█ ▄▀█ █▄█ ▄▀█      ░░░ ░░░ ░░░
-  █ ▀ █ █▀█  █  █▀█ v1.0
- ═══════════════════════════════════════════
- LOKESH-KUMAR | traps | recon | osint
+## PREVIEW
 
-Youtube : https://youtube.com/@termux2
-Github :  https://github.com/trmxvibs
-[1] IP Tracker
-[2] Port Scanner
-[3] Phone Number Tracker
-[4] Domain Intel (DNS)
-[5] Device Traper
-[6] Settings
-[0] Exit
+<img width="1315" height="911" alt="image" src="https://github.com/user-attachments/assets/4e022d9d-f0ca-40e4-857a-8f2654a3b1e8" />
 
-chakravyuh > 5
-
-[?] Select Trap Template:
- [1] Standard Loading
- [2] Fake Cloudflare
- [3] System Update
- > 1
-[+] Local: http://localhost:27174
-[*] Starting Tunnel...
-
- >>> LINK: https://details-meaning-with-trackback.trycloudflare.com <<<
-
-Waiting for victims... (Ctrl+C to stop)
-
-```
+## LEGAL DISCLAIMER
+---
+# CRITICAL WARNING
+---
+**This repository and the code provided are for educational purposes and authorized security research only.
+The developer (Lokesh Kumar) assumes no liability and is not responsible for any misuse or damage caused by this program.
+Using this tool to track or exploit targets without prior mutual consent may be illegal.
+It is the end user's responsibility to obey all applicable local, state, and federal laws.**
 
 
-
-## 3.  NETWORK WARFARE
-- Shodan Integration: Scans targets for Open Ports, Vulnerabilities (CVEs), and Operating System details.
-
-- Port Scanning: Multi-threaded analysis of critical ports (FTP, SSH, HTTP, RDP).
-
-- Domain Intel: Extracts DNS records and resolves Host IPs instantly.
-
-```python
-[?] Target IP: 135.148.100.147
-
-[*] IP Analysis...
- Geo    : Los Angeles, United States
- ISP    : OVH SAS
- Proxy  : True
- Map    : Saved as map_135.148.100.147.html
-
-Enter to return...
-```
-
-
-# INSTALLATION
-## >> TERMUX & LINUX (ROOT NOT REQUIRED)
-```python
-# UPDATE REPOSITORIES
-apt update && apt upgrade -y
-
-# INSTALL DEPENDENCIES
-pkg install git python -y
-
-# CLONE REPOSITORY
-git clone https://github.com/trmxvibs/ip-tracker
-
-# ENTER DIRECTORY
-cd ip-tracker
-
-# EXECUTE CHAKRAVYUH
-python3 chakravyuh.py
-```
-
-## >> WINDOWS
-+ Install Python 3.x.
-
-+ Download the Repository.
-
-
-+ Launch via CMD: `python chakravyuh.py.`
-
-## OPERATIONAL PREVIEW
-```html
-[+] VICTIM CAPTURED: 103.112.x.x @ 14:30:22
---- IDENTITY ---
- OS      : Android 13
- Browser : Chrome Mobile 112.0
- Loc     : Asia/Kolkata
-
---- HARDWARE INTEL ---
- Model   : Redmi/OnePlus/Poco (Snapdragon Detected)
- GPU     : Adreno (TM) 640
- CPU     : 8 Cores | RAM: 8 GB
- Screen  : 1080x2400
- Battery : 45% (Charging: YES)
- Net     : 4G
-```
-##   LEGAL DISCLAIMER 
-**`READ THIS BEFORE USE:`**
-
-This repository is for EDUCATIONAL PURPOSES and ETHICAL SECURITY RESEARCH only. The developer (Lokesh Kumar) creates tools to help security professionals and researchers understand the importance of privacy and digital footprints.
-
-DO NOT use this tool for illegal tracking or harassment.
-
-DO NOT use this tool on systems you do not own or have permission to test.
-
-The author is NOT responsible for any misuse or damage caused by this program.
-
-
+<div align="center"> <b>Project maintained by <a href="https://github.com/trmxvibs">trmxvibs</a></b> </div>
 
 
