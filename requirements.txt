@@ -1,0 +1,5 @@
+requests
+shodan
+folium
+user_agents
+phonenumbers
