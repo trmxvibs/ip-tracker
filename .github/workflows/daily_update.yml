@@ -2,14 +2,14 @@ name: Daily Auto-Update (Keep Alive)
 
 on:
   schedule:
-    - cron: '0 0 * * *' 
-  workflow_dispatch: 
+    - cron: '0 0 * * *' # Runs daily at midnight UTC
+  workflow_dispatch: # Allows manual run
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     permissions:
-      contents: write 
+      contents: write
 
     steps:
       - name: Checkout Repository
@@ -17,14 +17,13 @@ jobs:
 
       - name: Update Invisible Timestamp
         run: |
-          
-          sed -i '/" >> README.md
+          # 1. Delete old timestamp (Using double quotes to fix error)
+          sed -i "/" >> README.md
 
       - name: Commit & Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md
-          
           git commit -m "Auto-update: Daily Keep-Alive 🟢" || exit 0
           git push
